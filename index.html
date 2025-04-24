@@ -47,7 +47,7 @@
           const [tier, division] = rank.split(' ');
           const tierValue = rankOrder.indexOf(tier.charAt(0).toUpperCase() + tier.slice(1).toLowerCase());
           const divisionValue = 5 - (parseInt(division) || 5);          
-          return tierValue * 10 + divisionValue;        
+          return tierValue * 10 - divisionValue;        
         }
 
         // Trier les joueurs par classement décroissant
