@@ -36,48 +36,41 @@
   <div id="players"></div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      fetch('rank.json')
-        .then(res => res.json())
-        .then(data => {
-          const container = document.getElementById('players');
-          data.player_stats
-            .sort((a, b) => compareRank(b.rank, a.rank)) // Tri décroissant
-            .forEach(player => {
-              const card = document.createElement('div');
-              card.className = 'player-card';
+    fetch('rank.json')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('players');
+        const rankOrder = ['Challenger', 'Grandmaster', 'Master', 'Diamond', 'Emerald', 'Platinum', 'Gold', 'Silver', 'Bronze', 'Iron'];
 
-              const fullName = player.player;
-              const fullRank = player.rank;
-              const points = player.points.split('LP')[0] + 'LP';
-              const winRate = player.win_rate.split('L')[0] + 'L';
-              const winPercent = player["win_%"];
-
-              card.innerHTML = `
-                <h2>${fullName}</h2>
-                <p class="player-stat"><strong>Rang :</strong> ${fullRank}</p>
-                <p class="player-stat"><strong>Points :</strong> ${points}</p>
-                <p class="player-stat"><strong>Win Rate :</strong> ${winRate} (${winPercent}%)</p>
-              `;
-              container.appendChild(card);
-            });
-        });
-
-      function compareRank(rankA, rankB) {
-        const order = ["Bronze", "Silver", "Gold", "Platinum", "Emerald", "Diamond"];
-        const parseRank = rank => {
+        // Fonction pour extraire la valeur de classement pour trier
+        function getRankValue(rank) {
           const [tier, division] = rank.split(' ');
-          return {
-            tierIndex: order.indexOf(tier),
-            divisionIndex: parseInt(division)
-          };
-        };
-        const a = parseRank(rankA);
-        const b = parseRank(rankB);
-        if (a.tierIndex !== b.tierIndex) return a.tierIndex - b.tierIndex;
-        return b.divisionIndex - a.divisionIndex; // Division 1 > 4
-      }
-    });
+          const tierValue = rankOrder.indexOf(tier.charAt(0).toUpperCase() + tier.slice(1).toLowerCase());
+          const divisionValue = parseInt(division) || 0;
+          return tierValue * 10 - divisionValue;
+        }
+
+        // Trier les joueurs par classement décroissant
+        data.player_stats.sort((a, b) => getRankValue(a.rank) - getRankValue(b.rank));
+
+        // Générer les cartes
+        data.player_stats.forEach(player => {
+          const card = document.createElement('div');
+          card.className = 'player-card';
+
+          // Tronquer uniquement pour affichage
+          const displayPoints = player.points.split('LP')[0] + 'LP';
+          const displayWinRate = player.win_rate.split('L')[0] + 'L';
+
+          card.innerHTML = `
+            <h2>${player.player}</h2>
+            <p class="player-stat"><strong>Rang :</strong> ${player.rank}</p>
+            <p class="player-stat"><strong>Points :</strong> ${displayPoints}</p>
+            <p class="player-stat"><strong>Win Rate :</strong> ${displayWinRate} (${player["win_%"]}%)</p>
+          `;
+          container.appendChild(card);
+        });
+      });
   </script>
 </body>
 </html>
