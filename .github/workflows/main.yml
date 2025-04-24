@@ -1,0 +1,53 @@
+name: Run Scraper
+
+on:
+  # Run every 6 hours
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  
+  # Allows to manually trigger the workflow
+  workflow_dispatch:
+  
+  # Run on every push to the main branch
+  push:
+    branches:
+      - main
+
+jobs:
+  run-scraper:
+    permissions: 
+      contents: write  # Grant write permission to modify repository content
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      # Checkout the repository
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub Token for authentication
+
+      # Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install cheerio axios
+
+      # Run the scraper to update the rank.json file
+      - name: Run scrape.js
+        run: node scrape.js
+
+      # Commit the updated rank.json and push to the main branch
+      - name: Commit and push changes
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add rank.json
+          git commit -m "Update rank.json with latest scraped data"
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub Token for authentication
