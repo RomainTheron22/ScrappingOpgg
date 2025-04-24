@@ -29,7 +29,7 @@ async function scrapePlayerStats(playerUrl, playerName) {
     const players = [
       { url: 'https://op.gg/lol/summoners/euw/PichiaPastoris-667', name: 'PichiaPastoris-667' },
       { url: 'https://op.gg/lol/summoners/euw/Starfilleur-Bismi', name: 'Starfilleur-Bismi' },
-      { url: 'https://op.gg/lol/summoners/euw/Zion-777', name: 'Zion-777' },
+      { url: 'https://www.op.gg/summoners/euw/Zion-777', name: 'Zion-777' },
       { url: 'https://op.gg/lol/summoners/euw/Fan2chokbar-EUW', name: 'Fan2chokbar-EUW' }
     ];
 
