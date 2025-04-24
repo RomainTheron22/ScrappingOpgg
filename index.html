@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stats des joueurs OPGG</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+    }
+    .player-card {
+      background: white;
+      padding: 1rem 2rem;
+      margin: 1rem auto;
+      max-width: 400px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .player-card h2 {
+      margin: 0;
+      color: #333;
+    }
+    .player-stat {
+      margin: 0.3rem 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Stats OPGG des joueurs</h1>
+  <div id="players"></div>
+
+  <script>
+    fetch('rank.json')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('players');
+        data.player_stats.forEach(player => {
+          const card = document.createElement('div');
+          card.className = 'player-card';
+          card.innerHTML = `
+            <h2>${player.player}</h2>
+            <p class="player-stat"><strong>Rang :</strong> ${player.rank}</p>
+            <p class="player-stat"><strong>Points :</strong> ${player.points}</p>
+            <p class="player-stat"><strong>Win Rate :</strong> ${player.win_rate} (${player["win_%"]}%)</p>
+          `;
+          container.appendChild(card);
+        });
+      });
+  </script>
+</body>
+</html>
