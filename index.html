@@ -34,23 +34,30 @@
   <h1>Stats OPGG des joueurs</h1>
   <div id="players"></div>
 
-  <script>
-    fetch('rank.json')
-      .then(res => res.json())
-      .then(data => {
-        const container = document.getElementById('players');
-        data.player_stats.forEach(player => {
-          const card = document.createElement('div');
-          card.className = 'player-card';
-          card.innerHTML = `
-            <h2>${player.player}</h2>
-            <p class="player-stat"><strong>Rang :</strong> ${player.rank}</p>
-            <p class="player-stat"><strong>Points :</strong> ${player.points}</p>
-            <p class="player-stat"><strong>Win Rate :</strong> ${player.win_rate} (${player["win_%"]}%)</p>
-          `;
-          container.appendChild(card);
-        });
+ <script>
+  fetch('rank.json')
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById('players');
+      data.player_stats.forEach(player => {
+        const card = document.createElement('div');
+        card.className = 'player-card';
+
+        // Prendre uniquement les premiers caractères de chaque propriété
+        const shortPlayer = player.player.slice(0, 10); // Afficher les 5 premiers caractères du nom
+        const shortRank = player.rank.slice(0, 10); // Afficher les 7 premiers caractères du rang
+        const shortPoints = player.points.slice(0, 5); // Afficher les 5 premiers caractères des points
+        const shortWinRate = player.win_rate.slice(0, 5); // Afficher les 5 premiers caractères du win rate
+
+        card.innerHTML = `
+          <h2>${shortPlayer}</h2>
+          <p class="player-stat"><strong>Rang :</strong> ${shortRank}</p>
+          <p class="player-stat"><strong>Points :</strong> ${shortPoints}</p>
+          <p class="player-stat"><strong>Win Rate :</strong> ${shortWinRate} (${player["win_%"]}%)</p>
+        `;
+        container.appendChild(card);
       });
-  </script>
+    });
+</script>
 </body>
 </html>
