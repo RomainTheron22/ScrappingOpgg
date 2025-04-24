@@ -31,23 +31,29 @@
   </style>
 </head>
 <body>
-  <h1>Stats OPGG des joueurs</h1>
+  <h1>SoloQ Challenge / Deadline: 31 Août 2025</h1>
   <div id="players"></div>
+  <hr>
+  <h2>Classement Plus Grand Nombre de Game</h2>
+  <div id="ranking"></div>
+
 
  <script>
   fetch('rank.json')
     .then(res => res.json())
     .then(data => {
       const container = document.getElementById('players');
+      const rankingContainer = document.getElementById('ranking');
+
+      // Affichage normal des joueurs
       data.player_stats.forEach(player => {
         const card = document.createElement('div');
         card.className = 'player-card';
 
-        // Prendre uniquement les premiers caractères de chaque propriété
-        const shortPlayer = player.player.slice(0, 20); // Afficher les 5 premiers caractères du nom
-        const shortRank = player.rank.slice(0, 10); // Afficher les 7 premiers caractères du rang
-        const shortPoints = player.points.slice(0, 5); // Afficher les 5 premiers caractères des points
-        const shortWinRate = player.win_rate.slice(0, 7); // Afficher les 5 premiers caractères du win rate
+        const shortPlayer = player.player.slice(0, 5);
+        const shortRank = player.rank.slice(0, 7);
+        const shortPoints = player.points.slice(0, 5);
+        const shortWinRate = player.win_rate.slice(0, 5);
 
         card.innerHTML = `
           <h2>${shortPlayer}</h2>
@@ -57,7 +63,29 @@
         `;
         container.appendChild(card);
       });
+
+      // Calcul et affichage du classement par nombre total de parties
+      const rankedPlayers = data.player_stats.map(player => {
+        const [wins, losses] = player.win_rate.split(' ').map(s => parseInt(s));
+        const totalGames = wins + losses;
+        return { name: player.player, totalGames };
+      });
+
+      // Tri décroissant par nombre de parties jouées
+      rankedPlayers.sort((a, b) => b.totalGames - a.totalGames);
+
+      // Affichage du classement
+      const rankingTitle = document.createElement('h3');
+      rankingTitle.textContent = 'Classement par nombre total de parties jouées :';
+      rankingContainer.appendChild(rankingTitle);
+
+      rankedPlayers.forEach((player, index) => {
+        const rankItem = document.createElement('p');
+        rankItem.innerHTML = `<strong>#${index + 1}</strong> ${player.name} — ${player.totalGames} parties`;
+        rankingContainer.appendChild(rankItem);
+      });
     });
 </script>
+
 </body>
 </html>
