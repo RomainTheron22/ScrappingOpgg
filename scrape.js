@@ -8,10 +8,23 @@ async function scrapePlayerStats(playerUrl, playerName) {
   const { data: html } = await axios.get(playerUrl);
   const $ = cheerio.load(html);
 
+  // Récupération du rang
   const rank = $('strong.text-xl').text().trim();
-  const points = $('span.text-xs.text-gray-500').text().trim();
-  const record = $('div.text-right span.leading-\\[26px\\]').text().trim();
+
+  // Récupération des points
+  const pointsText = $('span.text-xs.text-gray-500').text().trim();
+  // Nettoyage des points pour ne garder que la première valeur (points LP)
+  const points = pointsText.split('\n')[0].trim();
+
+  // Récupération du win rate
+  const recordText = $('div.text-right span.leading-\\[26px\\]').text().trim();
   const winRateText = $('div.text-right span').eq(1).text().trim();
+  
+  // Récupérer les matchs gagnés et perdus
+  const recordParts = recordText.split(' ').filter(part => part.match(/\d+/));
+  const winRate = recordParts.length === 2 ? `${recordParts[0]}W ${recordParts[1]}L` : '';
+  
+  // Extraction du pourcentage de victoires
   const winRateMatch = winRateText.match(/(\d+)%/);
   const winPercentage = winRateMatch ? winRateMatch[1] : '';
 
@@ -19,7 +32,7 @@ async function scrapePlayerStats(playerUrl, playerName) {
     player: playerName,
     rank: rank,
     points: points,
-    win_rate: record,
+    win_rate: winRate,
     "win_%": winPercentage
   };
 }
