@@ -8,33 +8,19 @@ async function scrapePlayerStats(playerUrl, playerName) {
   const { data: html } = await axios.get(playerUrl);
   const $ = cheerio.load(html);
 
-  // Récupération du rang
   const rank = $('strong.text-xl').text().trim();
-
-  // Récupération des points
-  const pointsText = $('span.text-xs.text-gray-500').text().trim();
-  // Nettoyage des points pour ne garder que la première valeur (points LP)
-  const points = pointsText.split('\n')[0].trim();
-
-  // Récupération du win rate (matchs gagnés et perdus)
-  const recordText = $('div.text-right span.leading-\\[26px\\]').text().trim();
+  const points = $('span.text-xs.text-gray-500').text().trim();
+  const record = $('div.text-right span.leading-\\[26px\\]').text().trim();
   const winRateText = $('div.text-right span').eq(1).text().trim();
-  
-  // Récupérer les matchs gagnés et perdus
-  const recordParts = recordText.split(' ').filter(part => part.match(/\d+/));
-  const winRate = recordParts.length === 2 ? `${recordParts[0]}W ${recordParts[1]}L` : '';
-  
-  // Extraction du pourcentage de victoires
   const winRateMatch = winRateText.match(/(\d+)%/);
   const winPercentage = winRateMatch ? winRateMatch[1] : '';
 
-  // Filtrage des informations pour ne garder que celles nécessaires
   return {
     player: playerName,
     rank: rank,
-    points: points,      // Garder uniquement la première valeur des points
-    win_rate: winRate,   // Garder le win rate dans le format "94W 94L"
-    "win_%": winPercentage // Garder uniquement le pourcentage de victoire
+    points: points,
+    win_rate: record,
+    "win_%": winPercentage
   };
 }
 
@@ -43,7 +29,7 @@ async function scrapePlayerStats(playerUrl, playerName) {
     const players = [
       { url: 'https://op.gg/lol/summoners/euw/PichiaPastoris-667', name: 'PichiaPastoris-667' },
       { url: 'https://op.gg/lol/summoners/euw/Starfilleur-Bismi', name: 'Starfilleur-Bismi' },
-      { url: 'https://www.op.gg/summoners/euw/Zion-777', name: 'Zion-777' },
+      { url: 'https://op.gg/lol/summoners/euw/funkey-000', name: 'Zion-777' },
       { url: 'https://op.gg/lol/summoners/euw/Fan2chokbar-EUW', name: 'Fan2chokbar-EUW' }
     ];
 
