@@ -16,7 +16,7 @@ async function scrapePlayerStats(playerUrl, playerName) {
   // Nettoyage des points pour ne garder que la première valeur (points LP)
   const points = pointsText.split('\n')[0].trim();
 
-  // Récupération du win rate
+  // Récupération du win rate (matchs gagnés et perdus)
   const recordText = $('div.text-right span.leading-\\[26px\\]').text().trim();
   const winRateText = $('div.text-right span').eq(1).text().trim();
   
@@ -28,12 +28,13 @@ async function scrapePlayerStats(playerUrl, playerName) {
   const winRateMatch = winRateText.match(/(\d+)%/);
   const winPercentage = winRateMatch ? winRateMatch[1] : '';
 
+  // Filtrage des informations pour ne garder que celles nécessaires
   return {
     player: playerName,
     rank: rank,
-    points: points,
-    win_rate: winRate,
-    "win_%": winPercentage
+    points: points,      // Garder uniquement la première valeur des points
+    win_rate: winRate,   // Garder le win rate dans le format "94W 94L"
+    "win_%": winPercentage // Garder uniquement le pourcentage de victoire
   };
 }
 
