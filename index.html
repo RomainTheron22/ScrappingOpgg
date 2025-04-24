@@ -49,8 +49,8 @@
 
               const fullName = player.player;
               const fullRank = player.rank;
-              const points = player.points;
-              const winRate = player.win_rate;
+              const points = player.points.split('LP')[0] + 'LP';
+              const winRate = player.win_rate.split('L')[0] + 'L';
               const winPercent = player["win_%"];
 
               card.innerHTML = `
