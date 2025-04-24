@@ -1,48 +1,83 @@
-<script>
-  // Fonction pour attribuer une valeur numérique à chaque rang
-  function rankValue(rankStr) {
-    const tiers = {
-      "Challenger": 900,
-      "Grandmaster": 800,
-      "Master": 700,
-      "Diamond": 600,
-      "Emerald": 500,
-      "Platinum": 400,
-      "Gold": 300,
-      "Silver": 200,
-      "Bronze": 100,
-      "Iron": 0
-    };
-    const divisions = { "I": 4, "II": 3, "III": 2, "IV": 1 };
-    const match = rankStr.match(/(Challenger|Grandmaster|Master|Diamond|Emerald|Platinum|Gold|Silver|Bronze|Iron)\s?(I{1,3}|IV|II)?/i);
-    if (!match) return -1;
-    const tier = tiers[match[1].charAt(0).toUpperCase() + match[1].slice(1).toLowerCase()] || 0;
-    const division = divisions[match[2]] || 0;
-    return tier + division;
-  }
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stats des joueurs OPGG</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+    }
+    .player-card {
+      background: white;
+      padding: 1rem 2rem;
+      margin: 1rem auto;
+      max-width: 400px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .player-card h2 {
+      margin: 0;
+      color: #333;
+    }
+    .player-stat {
+      margin: 0.3rem 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>SoloQ Challenge - Deadline 31 Aout 2025</h1>
+  <p style="text-align: center;">Premier Passage Emerald ( Nathan & Romain ) <br> Passage Emerald de Romain & Nathan <br> Passage Diamant Louis </p>
+  <div id="players"></div>
 
-  fetch('rank.json')
-    .then(res => res.json())
-    .then(data => {
-      const container = document.getElementById('players');
-      // Trier les joueurs avant affichage
-      data.player_stats.sort((a, b) => rankValue(b.rank) - rankValue(a.rank));
-      data.player_stats.forEach(player => {
-        const card = document.createElement('div');
-        card.className = 'player-card';
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch('rank.json')
+        .then(res => res.json())
+        .then(data => {
+          const container = document.getElementById('players');
+          data.player_stats
+            .sort((a, b) => compareRank(b.rank, a.rank)) // Tri décroissant
+            .forEach(player => {
+              const card = document.createElement('div');
+              card.className = 'player-card';
 
-        const shortPlayer = player.player;
-        const shortRank = player.rank.slice;
-        const shortPoints = player.points.slice(0, 5);
-        const shortWinRate = player.win_rate.slice(0, 7);
+              const fullName = player.player;
+              const fullRank = player.rank;
+              const points = player.points;
+              const winRate = player.win_rate;
+              const winPercent = player["win_%"];
 
-        card.innerHTML = `
-          <h2>${shortPlayer}</h2>
-          <p class="player-stat"><strong>Rang :</strong> ${shortRank}</p>
-          <p class="player-stat"><strong>Points :</strong> ${shortPoints}</p>
-          <p class="player-stat"><strong>Win Rate :</strong> ${shortWinRate} (${player["win_%"]}%)</p>
-        `;
-        container.appendChild(card);
-      });
+              card.innerHTML = `
+                <h2>${fullName}</h2>
+                <p class="player-stat"><strong>Rang :</strong> ${fullRank}</p>
+                <p class="player-stat"><strong>Points :</strong> ${points}</p>
+                <p class="player-stat"><strong>Win Rate :</strong> ${winRate} (${winPercent}%)</p>
+              `;
+              container.appendChild(card);
+            });
+        });
+
+      function compareRank(rankA, rankB) {
+        const order = ["Bronze", "Silver", "Gold", "Platinum", "Emerald", "Diamond"];
+        const parseRank = rank => {
+          const [tier, division] = rank.split(' ');
+          return {
+            tierIndex: order.indexOf(tier),
+            divisionIndex: parseInt(division)
+          };
+        };
+        const a = parseRank(rankA);
+        const b = parseRank(rankB);
+        if (a.tierIndex !== b.tierIndex) return a.tierIndex - b.tierIndex;
+        return b.divisionIndex - a.divisionIndex; // Division 1 > 4
+      }
     });
-</script>
+  </script>
+</body>
+</html>
