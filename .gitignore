@@ -1,0 +1,5 @@
+# Ne pas versionner les clés/API secrètes
+.env
+
+# Node.js
+node_modules/
