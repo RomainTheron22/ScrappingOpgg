@@ -7,12 +7,17 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f5f5f5;
+      background: url('rom.png') no-repeat center center fixed; /* Remplacez 'background.jpg' par le chemin de votre image */
+      background-size: cover;      
       padding: 2rem;
     }
     h1 {
       text-align: center;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
     }
+
+    
     .player-card {
       background: white;
       padding: 1rem 2rem;
@@ -62,11 +67,17 @@
           const displayPoints = player.points.split('LP')[0] + 'LP';
           const displayWinRate = player.win_rate.split('L')[0] + 'L';
 
+          // Calculer le total de parties jouées
+        const [wins, losses] = player.win_rate.match(/\d+/g).map(Number);
+        const totalGames = wins + losses;
+
+
           card.innerHTML = `
             <h2>${player.player}</h2>
             <p class="player-stat"><strong>Rang :</strong> ${player.rank}</p>
             <p class="player-stat"><strong>Points :</strong> ${displayPoints}</p>
-            <p class="player-stat"><strong>Win Rate :</strong> ${displayWinRate} (${player["win_%"]}%)</p>
+            <p class="player-stat"><strong>Win Rate :</strong> ${displayWinRate} (${player["win_%"]}% </p>
+            <p class="player-stat"><strong>Total Games :</strong> ${totalGames}</p>
           `;
           container.appendChild(card);
         });
