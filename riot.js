@@ -5,6 +5,7 @@ dotenv.config();
 
 const REGION = "euw1";
 const RIOT_API_KEY = process.env.RIOT_API_KEY;
+console.log('✅ Clé Riot chargée :', RIOT_API_KEY);
 
 const summoners = JSON.parse(fs.readFileSync("summoners.json", "utf-8"));
 const output = {};
@@ -23,6 +24,8 @@ async function fetchSummonerData(name) {
     headers: { "X-Riot-Token": RIOT_API_KEY },
   });
   const leagues = await leagueRes.json();
+
+  console.log('LEAGUES', leagues);
 
   const soloQ = leagues.find(entry => entry.queueType === "RANKED_SOLO_5x5");
 

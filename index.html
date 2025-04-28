@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Stats des joueurs OPGG</title>
+  <title>Stats des joueurs SoloQ</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -31,8 +31,12 @@
   </style>
 </head>
 <body>
-  <h1>SoloQ Challenge - Deadline 31 Aout 2025</h1>
-  <p style="text-align: center;">Premier Passage Emerald ( Nathan & Romain ) <br> Passage Emerald de Romain & Nathan <br> Passage Diamant Louis </p>
+  <h1>SoloQ Challenge - Deadline 31 Août 2025</h1>
+  <p style="text-align: center;">
+    Premier Passage Emerald (Nathan & Romain)<br>
+    Passage Diamant Louis
+  </p>
+
   <div id="players"></div>
 
   <script>
@@ -40,33 +44,32 @@
       .then(res => res.json())
       .then(data => {
         const container = document.getElementById('players');
-        const rankOrder = ['Challenger', 'Grandmaster', 'Master', 'Diamond', 'Emerald', 'Platinum', 'Gold', 'Silver', 'Bronze', 'Iron'];
+        const rankOrder = ['CHALLENGER', 'GRANDMASTER', 'MASTER', 'DIAMOND', 'EMERALD', 'PLATINUM', 'GOLD', 'SILVER', 'BRONZE', 'IRON'];
 
-        // Fonction pour extraire la valeur de classement pour trier
-        function getRankValue(rank) {
-          const [tier, division] = rank.split(' ');
-          const tierValue = rankOrder.indexOf(tier.charAt(0).toUpperCase() + tier.slice(1).toLowerCase());
-          const divisionValue = 5 - (parseInt(division) || 5);          
-          return tierValue * 10 - divisionValue;        
+        // Convertir l'objet en tableau
+        const players = Object.values(data);
+
+        // Fonction pour donner une "valeur" au classement
+        function getRankValue(player) {
+          const tierValue = rankOrder.indexOf(player.tier);
+          const divisionValue = 5 - parseInt(player.rank?.replace(/[^0-9]/g, '') || "5");
+          return tierValue * 10 + divisionValue;
         }
 
-        // Trier les joueurs par classement décroissant
-        data.player_stats.sort((a, b) => getRankValue(a.rank) - getRankValue(b.rank));
+        // Trier les joueurs par classement
+        players.sort((a, b) => getRankValue(a) - getRankValue(b));
 
-        // Générer les cartes
-        data.player_stats.forEach(player => {
+        players.forEach(player => {
+          const totalGames = player.wins + player.losses;
+          const winRate = totalGames > 0 ? ((player.wins / totalGames) * 100).toFixed(1) : "0";
+
           const card = document.createElement('div');
           card.className = 'player-card';
-
-          // Tronquer uniquement pour affichage
-          const displayPoints = player.points.split('LP')[0] + 'LP';
-          const displayWinRate = player.win_rate.split('L')[0] + 'L';
-
           card.innerHTML = `
-            <h2>${player.player}</h2>
-            <p class="player-stat"><strong>Rang :</strong> ${player.rank}</p>
-            <p class="player-stat"><strong>Points :</strong> ${displayPoints}</p>
-            <p class="player-stat"><strong>Win Rate :</strong> ${displayWinRate} (${player["win_%"]}%)</p>
+            <h2>${player.name}</h2>
+            <p class="player-stat"><strong>Rang :</strong> ${player.tier} ${player.rank}</p>
+            <p class="player-stat"><strong>Points :</strong> ${player.lp} LP</p>
+            <p class="player-stat"><strong>Win Rate :</strong> ${player.wins}W / ${player.losses}L (${winRate}%)</p>
           `;
           container.appendChild(card);
         });
