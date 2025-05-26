@@ -3,7 +3,7 @@
     {
       "player": "PichiaPastoris-667",
       "rank": "emerald 3gold 4",
-      "points": "13 LP18 LP83 LP36 LP355,469\npts258,798\npts249,222\npts193,955\npts",
+      "points": "33 LP18 LP83 LP36 LP355,469\npts258,798\npts249,222\npts193,955\npts",
       "win_rate": "164W 138L52W 58L",
       "win_%": "54"
     },
@@ -17,15 +17,15 @@
     {
       "player": "Zion-777",
       "rank": "emerald 4emerald 4",
-      "points": "10 LP69 LP35 LP63 LP261,294\npts253,561\npts166,894\npts162,470\npts",
-      "win_rate": "63W 56L29W 36L",
-      "win_%": "53"
+      "points": "0 LP69 LP35 LP63 LP261,294\npts253,561\npts169,733\npts162,470\npts",
+      "win_rate": "64W 59L30W 36L",
+      "win_%": "52"
     },
     {
       "player": "Fan2chokbar-EUW",
       "rank": "platinum 2platinum 4",
-      "points": "30 LP7 LP9 LP9 LP244,657\npts224,083\npts137,020\npts101,262\npts",
-      "win_rate": "85W 75L36W 33L",
+      "points": "56 LP7 LP0 LP9 LP244,657\npts224,083\npts137,020\npts101,262\npts",
+      "win_rate": "86W 75L36W 34L",
       "win_%": "53"
     }
   ]
