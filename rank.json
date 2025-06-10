@@ -2,9 +2,9 @@
   "player_stats": [
     {
       "player": "PichiaPastoris-667",
-      "rank": "emerald 4gold 4",
-      "points": "89 LP18 LP32 LP36 LP360,478\npts263,813\npts261,277\npts246,834\npts",
-      "win_rate": "218W 194L53W 60L",
+      "rank": "emerald 3gold 4",
+      "points": "31 LP18 LP32 LP36 LP360,478\npts268,455\npts261,277\npts250,406\npts",
+      "win_rate": "224W 198L53W 60L",
       "win_%": "53"
     },
     {
@@ -23,9 +23,9 @@
     },
     {
       "player": "Fan2chokbar-EUW",
-      "rank": "platinum 1platinum 4",
-      "points": "70 LP70 LP0 LP9 LP244,657\npts224,083\npts137,020\npts101,262\npts",
-      "win_rate": "98W 83L36W 35L",
+      "rank": "emerald 4platinum 4",
+      "points": "21 LP21 LP0 LP9 LP244,657\npts224,083\npts137,020\npts101,262\npts",
+      "win_rate": "104W 87L36W 35L",
       "win_%": "54"
     }
   ]
